@@ -3,7 +3,6 @@ from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 import src.config as config
 
-# (Giữ nguyên phần image_transforms...)
 image_transforms = {
     'train': transforms.Compose([
         transforms.Resize(size=(config.IMAGE_SIZE, config.IMAGE_SIZE)),
@@ -13,7 +12,7 @@ image_transforms = {
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
-    # Transform cho 'val' và 'test' là như nhau (không có augmentation)
+
     'val': transforms.Compose([
         transforms.Resize(size=(config.IMAGE_SIZE, config.IMAGE_SIZE)),
         transforms.ToTensor(),
@@ -22,7 +21,7 @@ image_transforms = {
 }
 
 
-# --- NÂNG CẤP HÀM NÀY ---
+
 def get_dataloaders(get_train=True, get_val=True, get_test=False):
     """
     Tạo và trả về DataLoaders.

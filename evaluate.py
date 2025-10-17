@@ -6,12 +6,11 @@ import torch.nn as nn
 import src.config as config
 from src.model import SimpleCNN
 from src.dataset import get_dataloaders
-from src.engine import validate_one_epoch  # Tái sử dụng hàm validate
+from src.engine import validate_one_epoch
 
 
 def main():
     print(f"Bắt đầu đánh giá model trên thiết bị: {config.DEVICE}")
-
     print(f"Bắt đầu đánh giá model trên tập TEST...")
 
     # 1. Tải dữ liệu TEST
@@ -25,7 +24,6 @@ def main():
 
     # 3. Tải trọng số đã train
     try:
-        # map_location=config.DEVICE giúp tải model lên CPU nếu train bằng GPU
         model.load_state_dict(
             torch.load(config.MODEL_PATH, map_location=config.DEVICE)
         )
@@ -38,14 +36,12 @@ def main():
         print(f"LỖI khi tải model: {e}")
         return
 
-    # 4. Định nghĩa Loss (cần cho hàm validate)
+    # 4. Định nghĩa Loss
     criterion = nn.CrossEntropyLoss()
 
     # 5. Chạy đánh giá
-    # Hàm validate_one_epoch sẽ tự động chuyển model sang .eval()
-    # và chạy với torch.no_grad()
     print("Đang chạy đánh giá...")
-    val_loss, val_acc = validate_one_epoch(
+    test_loss, test_acc = validate_one_epoch(
         model, test_dataloader, criterion, config.DEVICE
     )
 
@@ -53,8 +49,8 @@ def main():
     print("\n" + "=" * 30)
     print("       KẾT QUẢ ĐÁNH GIÁ")
     print("=" * 30)
-    print(f"> Validation Loss: {val_loss:.4f}")
-    print(f"> Độ chính xác (Accuracy): {val_acc * 100:.2f} %")
+    print(f"> Test Loss: {test_loss:.4f}")
+    print(f"> Độ chính xác (Accuracy): {test_acc * 100:.2f} %")
     print("=" * 30)
 
 
